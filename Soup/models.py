@@ -2,8 +2,20 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-# from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 import uuid
+
+HOBBY = [
+    ("PLANTS", "Plants"),
+    ("ART", "Art"),
+    ("FOOD", "Food"),
+    ("CROCHET", "Crochet"),
+    ("TTRPG", "TTRPG"),
+    ("BOOKS", "Books"),
+    ("GAMES", "Games"),
+    ("MOVIES", "Movies"),
+    ("HIKING", "Hiking"),
+]
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -35,15 +47,14 @@ class Author(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     email = models.CharField(blank=True)
     password = models.CharField(max_length=128, default="thisisapassword")
+    hobby = JSONField(default='') # This will be a list of strings of hobbies that the user has selected
 
     date_joined = models.DateTimeField(default=timezone.now)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-
-    # TODO: add hobby tags
-
     objects = UserManager()
+
     # Authentication Requirements
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "password"]
@@ -59,12 +70,10 @@ class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=300, blank=True)
     description = models.TextField(blank=True)
-
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    hobby = models.CharField(max_length=300, choices=HOBBY, default='PLANTS')
 
-    # TODO: add hobby tags
-
-    published = models.DateTimeField(auto_now_add=True) # auto_now_add=True means it is only set ONCE on creation.
+    published = models.DateTimeField(default=timezone.now)
     views = models.PositiveIntegerField(default=0)
 
 class Image(models.Model):
@@ -92,5 +101,5 @@ class Comment(models.Model):
     
     content = models.TextField(max_length=200, blank=True)
     
-    published = models.DateTimeField(auto_now_add=True)
+    published = models.DateTimeField(default=timezone.now)
 
