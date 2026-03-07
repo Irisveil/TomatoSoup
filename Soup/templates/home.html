@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tomato Soup | Home</title>
+  <link rel="stylesheet" href="{% static 'css/global.css' %}" />
+</head>
+<body>
+  <header>
+    <h1>Tomato Soup</h1>
+    <a href="{% url 'profile' %}">
+      {{ author.username }}
+    </a>
+  </header>
+
+  <main>
+    <section>
+      <h2>Your Feed</h2>
+      {% for post in feed_posts %}
+        <article>
+          <h3>{{ post.title|default:"Untitled Post" }}</h3>
+          <p>By {{ post.author.username }} • {{ post.published|date:"M d, Y H:i" }}</p>
+          <p>{{ post.description }}</p>
+          <p>Views: {{ post.views }}</p>
+
+          {% with post.image_set.all as images %}
+            {% if images %}
+              <img src="{{ images.0.image.url }}" alt="Post image" style="max-width: 220px;" />
+            {% endif %}
+          {% endwith %}
+
+          <p><a href="{% url 'post' post.id %}">Open post</a></p>
+        </article>
+      {% empty %}
+        <p>No posts yet.</p>
+      {% endfor %}
+    </section>
+
+    <aside>
+      <section>
+        <h2>Live Chat</h2>
+        {% for msg in live_chat %}
+          <p>
+            <strong>{{ msg.author.username }}</strong>: {{ msg.content }}
+            <br />
+            <small>{{ msg.published|date:"H:i" }}</small>
+          </p>
+        {% empty %}
+          <p>No chat activity yet.</p>
+        {% endfor %}
+      </section>
+
+      <section>
+        <h2>Spotlight</h2>
+        <p>
+          <a href="?spotlight=newest">Newest</a> |
+          <a href="?spotlight=views">Most Viewed</a>
+        </p>
+        {% for post in spotlight_feed %}
+          <p>
+            <strong>{{ post.title|default:"Untitled Post" }}</strong><br />
+            {{ post.author.username }} • {{ post.views }} views
+          </p>
+        {% empty %}
+          <p>No spotlight posts yet.</p>
+        {% endfor %}
+      </section>
+    </aside>
+  </main>
+</body>
+</html>

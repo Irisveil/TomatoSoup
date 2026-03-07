@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from .models import Author, Post, Comment
 
 def login_view(request):
 
@@ -14,16 +15,17 @@ def signup_view(request):
 @login_required
 def home_view(request):
     # IS this bittttch logged in?
-    author = Author.objects.select_related("user").get(user=request.user)
+    author = request.user
 
     # Author's feed of posts with others that share their hobby
     feed_posts = (
         Post.objects
         .select_related("author")
-        .prefetch_related("images")
+        .prefetch_related("image_set")
+        # TODO: 
         .filter(author__hobbies__in=author.hobbies.all())
         .distinct()
-        .order_by("-created_at")
+        .order_by("-published")
     )
     
     # Spotlight on either the newest or the most views
@@ -31,13 +33,13 @@ def home_view(request):
     if spotlight_feed == "views":
         spotlight_feed = Post.objects.order_by("-views")[:5]
     else:
-        spotlight_feed = Post.objects.order_by("-created_at")[:5]
+        spotlight_feed = Post.objects.order_by("-published")[:5]
 
     # Live chat
     live_chat = (
         Comment.objects
         .select_related("author", "post")
-        .order_by("-created_at")[:15]
+        .order_by("-published")[:15]
     )
 
     context = {
