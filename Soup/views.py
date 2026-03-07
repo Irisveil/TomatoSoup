@@ -9,8 +9,6 @@ def signup_view(request):
 
     return render(request, 'signup.html')
 
-# Create your views here.
-
 @login_required
 def home_view(request):
     # IS this bittttch logged in?
