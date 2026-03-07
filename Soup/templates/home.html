@@ -1,13 +1,17 @@
+{% extends 'components/base.html'}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% block head %}
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tomato Soup | Home</title>
   <link rel="stylesheet" href="{% static 'css/global.css' %}" />
+  {% endblock %}
 </head>
 <body>
+  {% block content %}
   <header>
     <h1>Tomato Soup</h1>
     <a href="{% url 'profile' %}">
@@ -69,5 +73,6 @@
       </section>
     </aside>
   </main>
+  {% endblock %}
 </body>
 </html>

@@ -1,0 +1,133 @@
+<!--
+extend base.html using (at the very top):
+{% extends 'components/base.html'}
+
+Use {% block head %} {% endblock %} and {% block content %} {% endblock %} to insert the head and content
+-->
+
+<!DOCTYPE HTML> 
+<html lang="en">
+    <head> 
+        {% load static %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'golden/css/global.css' %}">
+        <link rel="stylesheet" href="{% static 'golden/css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'golden/css/mobile_css/mobile_base.css' %}?v=999">
+        {% block head %}{% endblock %}
+    </head> 
+
+    <body>
+
+        <!-- Primary Navigation Top Bar -->
+       <header class="topbar">
+            <section class="topbar-left">
+                <img class="golden-logo"
+                    src="{% static 'golden/icons/golden-logo.png' %}"
+                    alt="golden logo">
+                <span class="topbar-title">GOLDEN</span>
+            </section>
+
+            <nav class="top-nav" aria-label="Primary Navigation">
+                <a href="{% url 'new_edit_entry_view' %}" class="top-icon-btn" aria-label="Create New Post">
+                    <img src="{% static 'golden/icons/entry-add-icon.png' %}" alt="Add Post">
+                </a>
+
+                <a href="{% url 'stream' %}" class="top-icon-btn" aria-label="Check Stream">
+                    <img src="{% static 'golden/icons/home-icon.png' %}" alt="Home">
+                </a>
+
+                <a href="{% url 'profile' %}" class="top-icon-btn" aria-label="Profile">
+                    <img src="{% static 'golden/icons/user-icon.png' %}" alt="Profile">
+                </a>
+            </nav>
+        </header>
+
+
+        <!-- Child templates will over ride to display page content-->
+        <main class="page-content">{% block content %}{% endblock %}</main>
+
+        <!-- Mobile Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="{% url 'stream' %}" class="bottom-item" aria-label="Home Stream">
+                <img src="{% static 'golden/icons/home-icon.png' %}" alt="">
+                <span>Stream</span>
+            </a>
+
+            <a href="{% url 'new_edit_entry_view' %}" class="add-button" aria-label="New Post">
+                <img src="{% static 'golden/icons/entry-add-icon.png' %}" alt="">
+            </a>
+
+            <a href="{% url 'profile' %}" class="bottom-item" aria-label="Profile">
+                <img src="{% static 'golden/icons/user-icon.png' %}" alt="">
+                <span>Profile</span>
+            </a>
+        </nav>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBtn = document.getElementById("themeToggle");
+  const root = document.documentElement;
+
+  const savedTheme = localStorage.getItem("theme") || "dark";
+  root.setAttribute("data-theme", savedTheme);
+
+  if (toggleBtn) {
+      toggleBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const current = root.getAttribute("data-theme") || "dark";
+          const next = current === "light" ? "dark" : "light";
+          root.setAttribute("data-theme", next);
+          localStorage.setItem("theme", next);
+      });
+  }
+});
+
+document.querySelectorAll(".entry").forEach(entry => {
+    entry.addEventListener("click", function (e) {
+
+        // Prevent clicks on buttons, images, or links
+        if (
+            e.target.closest("button") ||
+            e.target.tagName === "IMG" ||
+            e.target.closest("a")
+        ) return;
+
+        const fqid = entry.dataset.entryId;
+        const uuid = fqid.split("/").pop();
+        window.location.href = `/golden/entry/${uuid}/`;
+    });
+});
+
+document.addEventListener("click", function(e) {
+
+    const commentBtn = e.target.closest(".comment-btn");
+    if (commentBtn) {
+        e.stopPropagation();
+        const url = commentBtn.dataset.entryUrl;
+        window.location.href = url;
+        return;
+    }
+});  
+
+document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+
+        const entryUrl = this.dataset.entryUrl;
+        const fullUrl = window.location.origin + entryUrl;
+
+        navigator.clipboard.writeText(fullUrl).then(() => {
+            alert("Link copied to clipboard!");
+        }).catch(err => {
+            console.error("Failed to copy link:", err);
+        });
+    });
+});
+
+
+</script>
+
+
+</body>
+</html>
