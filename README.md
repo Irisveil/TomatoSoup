@@ -8,6 +8,13 @@ Make migrations (commit database changes): python manage.py makemigrations Soup
 Migrate (apply those changes): python manage.py migrate
 Run server: python manage.py runserver
 
+FOR EACH HTML FILE:
+extend base.html using (at the very top):
+{% extends 'base.html' %}
+
+Use {% block head %} {% endblock %} and {% block content %} {% endblock %} to insert the head and content
+See home.html for example
+
 
 idea: profile photo, friend system, dynamic topics (admin only)
 
