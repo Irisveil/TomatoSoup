@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.db.models import JSONField
+from django.db.models import JSONField, Q
 import uuid
 
 HOBBY = [
@@ -103,3 +103,100 @@ class Comment(models.Model):
     
     published = models.DateTimeField(default=timezone.now)
 
+class HobbyTag(models.Model):
+    """
+    This class stores the hobbies 
+    """
+    slug = models.SlugField(max_length = 50, unique = True)
+    label = models.CharField(max_length = 100, unique = True)
+
+    def __str__(self):
+        return self.label
+    
+class TopicCandidate(models.Model):
+    
+    class Status(models.TextChoices):
+        NEW = 'NEW', 'New'
+        KEPT = 'KEPT', 'Kept'
+        REJECTED = 'REJECTED', 'Rejected'
+        POSTED = 'POSTED', 'Posted'
+
+    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    source_name = models.CharField(max_length = 120)
+    source_url = models.URLField(max_length = 500)
+    title = models.CharField(max_length = 300)
+    summary = models.TextField(blank = True)
+    published_at = models.DateTimeField()
+    region = models.CharField(max_length=120, default = "province-wide")
+    raw_hash = models.CharField(max_length = 64, unique = True)
+    matched_tags = models.ManyToManyField(HobbyTag, blank = True)
+    score = models.FloatField(default = 0.0)
+    status = models.CharField(max_length = 20, choices = Status.choices, default = Status.NEW)  
+    created_at = models.DateTimeField(auto_now_add = True)
+
+    class Meta:
+        ordering = ['-published_at']
+        indexes = [
+            models.Index(fields = ['status']),
+            models.Index(fields = ['published_at']),
+            models.Index(fields = ['score']),
+        ]
+
+    def __str__(self):
+        return self.title
+    
+class AgentRun(models.Model):
+    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    started_at = models.DateTimeField(default = timezone.now)
+    finished_at = models.DateTimeField(null = True, blank = True)
+    items_fetched = models.PositiveIntegerField(default = 0)
+    items_kepts = models.PositiveIntegerField(default = 0)
+    posts_created = models.PositiveIntegerField(default = 0)
+    errors = models.TextField(blank = True)
+
+    class Meta:
+        ordering = ['-started_at']
+
+    def __str__(self):
+        return f"AgentRun {self.started_at:%Y-%m-%d %H:%M}"
+    
+class PostAgentMeta(models.Model):
+
+    class OriginType(models.TextChoices):
+        EXTERNAL_TOPIC = 'external_topic', 'External Topic'
+        REVIVED_POST = 'revived_post', 'Revived Post'
+
+    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
+    post = models.OneToOneField(Post, on_delete = models.CASCADE, related_name='agent_meta')
+    origin_type = models.CharField(max_length = 30, choices = OriginType.choices)
+
+    topic_cadidate = models.ForeignKey(
+        TopicCandidate,
+        on_delete = models.SET_NULL,
+        null = True,
+        blank = True,
+        related_name = 'published_posts',
+    )
+
+    revived_from_post = models.ForeignKey(
+        'Post',
+        on_delete = models.SET_NULL,
+        null = True,
+        blank = True,
+        related_name = 'revived_by_agent_meta',
+    )
+
+    model_name = models.CharField(max_length = 120, blank = True)
+    safety_passed = models.BooleanField(default = False)
+    created_at = models.DateTimeField(auto_now_add = True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check = Q(topic_candidate_isnull = False) | Q(revived_from_post_isnull = False),
+                name = 'post_agent_meta_origin_link',
+            )
+        ]
+
+    def __str__(self):
+        return f"AgentMeta for {self.post_id}"
