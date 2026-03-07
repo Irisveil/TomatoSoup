@@ -52,6 +52,20 @@ def home_view(request):
     # return render(request, 'post.html')
 
 @login_required
+def profile_view(request):
+    """
+    Allows users to view their profile
+    """
+
+    return render(request, 'profile.html')
+
+@login_required
+def post_view(request):
+    """
+    Viewing a post and allows users to comment
+    """
+
+@login_required
 def create_post_view(request):
     """
     Allows users to create a post
