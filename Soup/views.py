@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 def login_view(request):
@@ -9,27 +10,44 @@ def signup_view(request):
     return render(request, 'signup.html')
 
 # Create your views here.
+
 @login_required
 def home_view(request):
-    """
-    Primary view to see all entries
-    """
+    # IS this bittttch logged in?
+    author = Author.objects.select_related("user").get(user=request.user)
 
-    return render(request, 'home.html')
+    # Author's feed of posts with others that share their hobby
+    feed_posts = (
+        Post.objects
+        .select_related("author")
+        .prefetch_related("images")
+        .filter(author__hobbies__in=author.hobbies.all())
+        .distinct()
+        .order_by("-created_at")
+    )
+    
+    # Spotlight on either the newest or the most views
+    spotlight_feed = request.GET.get("spotlight", "newest")
+    if spotlight_feed == "views":
+        spotlight_feed = Post.objects.order_by("-views")[:5]
+    else:
+        spotlight_feed = Post.objects.order_by("-created_at")[:5]
 
-@login_required
-def profile_view(request):
-    """
-    Allows users to view their profile
-    """
+    # Live chat
+    live_chat = (
+        Comment.objects
+        .select_related("author", "post")
+        .order_by("-created_at")[:15]
+    )
 
-    return render(request, 'profile.html')
+    context = {
+        "author": author,
+        "feed_posts": feed_posts,
+        "spotlight_feed": spotlight_feed,
+        "live_chat": live_chat,
+    }
 
-@login_required
-def post_view(request):
-    """
-    Viewing a post and allows users to comment
-    """
+    return render(request, "home.html", context)
 
     # return render(request, 'post.html')
 
