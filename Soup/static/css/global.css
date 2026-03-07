@@ -5,10 +5,158 @@
   font-style: normal;
 }
 
+:root {
+  --ts-color-header: #e47c2b;
+  --ts-color-header-text: #fff7e8;
+  --ts-color-bg: #fbe8c4;
+  --ts-color-footer: #5f7389;
+  --ts-color-footer-text: #f4f7fb;
+  --ts-color-link: #f4f7fb;
+  --ts-color-link-muted: rgba(244, 247, 251, 0.78);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
 body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
   font-family: "Ribeye", cursive;
+  background-color: var(--ts-color-bg);
+  color: #2b2b2b;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+.topbar {
+  background-color: var(--ts-color-header);
+  color: var(--ts-color-header-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  min-height: 72px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.topbar-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .topbar-title {
   font-family: "Ribeye", cursive;
+  font-size: 1.8rem;
+  letter-spacing: 0.03em;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  font-size: 0.95rem;
+}
+
+.topbar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ts-color-header-text);
+  opacity: 0.9;
+}
+
+.topbar-link:hover,
+.topbar-link:focus-visible {
+  opacity: 1;
+}
+
+.topbar-link-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 247, 232, 0.9);
+}
+
+.topbar-link-label {
+  text-transform: capitalize;
+}
+
+.page-content {
+  flex: 1;
+  padding: 2rem 3rem;
+}
+
+.footer {
+  background-color: var(--ts-color-footer);
+  color: var(--ts-color-footer-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 3rem;
+  font-size: 0.8rem;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.footer-link {
+  color: var(--ts-color-link-muted);
+}
+
+.footer-link:hover,
+.footer-link:focus-visible {
+  color: var(--ts-color-link);
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 1.25rem;
+  }
+
+  .page-content {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .footer {
+    padding: 0.75rem 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .footer-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
 }

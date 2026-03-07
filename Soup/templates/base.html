@@ -14,18 +14,45 @@
         <!-- Top Bar -->
         <header class="topbar">
             <section class="topbar-left">
-                <img
-                    src="{% static 'icons/tomatosoup-icon.svg' %}"
-                    alt="Soup Logo">
-                <span class="topbar-title">Tomato Soup</span>
+                <a href="#" class="topbar-logo">
+                    <img
+                        src="{% static 'icons/tomatosoup-icon.svg' %}"
+                        alt="Tomato Soup logo">
+                    <span class="topbar-title">Tomato Soup</span>
+                </a>
             </section>
-        </header>
 
+            <nav class="topbar-right" aria-label="Primary">
+                <a href="#" class="topbar-link">
+                    <span class="topbar-link-icon" aria-hidden="true"></span>
+                    <span class="topbar-link-label">Home</span>
+                </a>
+                <a href="#" class="topbar-link">
+                    <span class="topbar-link-icon" aria-hidden="true"></span>
+                    <span class="topbar-link-label">Profile</span>
+                </a>
+                <a href="#" class="topbar-link">
+                    <span class="topbar-link-icon" aria-hidden="true"></span>
+                    <span class="topbar-link-label">Sign In</span>
+                </a>
+            </nav>
+        </header>
 
         <!-- Child templates will over ride to display page content-->
         <main class="page-content">{% block content %}{% endblock %}</main>
 
         <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>&copy; 2022 Company Name.</span>
+            </div>
+            <nav class="footer-links" aria-label="Footer">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms &amp; Conditions</a>
+                <a href="#" class="footer-link">Cookie Policy</a>
+                <a href="#" class="footer-link">Contact</a>
+            </nav>
+        </footer>
 
         <script>
             // document.addEventListener("DOMContentLoaded", () => {
