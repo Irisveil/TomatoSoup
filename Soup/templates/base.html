@@ -11,7 +11,7 @@ Use {% block head %} {% endblock %} and {% block content %} {% endblock %} to in
         {% load static %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'golden/css/global.css' %}">
+        <link rel="stylesheet" href="{% static 'css/global.css' %}">
         {% block head %}{% endblock %}
     </head> 
 
@@ -21,7 +21,7 @@ Use {% block head %} {% endblock %} and {% block content %} {% endblock %} to in
         <header class="topbar">
             <section class="topbar-left">
                 <img
-                    src="{% static 'Soup/icons/tomatosoup-icon.svg' %}"
+                    src="{% static 'icons/tomatosoup-icon.svg' %}"
                     alt="Soup Logo">
                 <span class="topbar-title">GOLDEN</span>
             </section>

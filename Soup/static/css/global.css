@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Ribeye";
+  src: url("../fonts/Ribeye-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  font-family: "Ribeye", cursive;
+}
+
+.topbar-title {
+  font-family: "Ribeye", cursive;
+}

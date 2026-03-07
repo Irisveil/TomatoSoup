@@ -49,7 +49,7 @@ def home_view(request):
 
     return render(request, "home.html", context)
 
-    # return render(request, 'post.html')
+    #return render(request, 'home.html')
 
 @login_required
 def profile_view(request):
