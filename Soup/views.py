@@ -1,16 +1,10 @@
 from django.shortcuts import render
 
 def login_view(request):
-    """
-    Primary view to see all entries and their filtered variations 
-    """
 
     return render(request, 'login.html')
 
 def signup_view(request):
-    """
-    Primary view to see all entries and their filtered variations 
-    """
 
     return render(request, 'signup.html')
 
@@ -18,7 +12,31 @@ def signup_view(request):
 @login_required
 def home_view(request):
     """
-    Primary view to see all entries and their filtered variations 
+    Primary view to see all entries
     """
 
-    # return render(request, 'home.html')
+    return render(request, 'home.html')
+
+@login_required
+def profile_view(request):
+    """
+    Allows users to view their profile
+    """
+
+    return render(request, 'profile.html')
+
+@login_required
+def post_view(request):
+    """
+    Viewing a post and allows users to comment
+    """
+
+    # return render(request, 'post.html')
+
+@login_required
+def create_post_view(request):
+    """
+    Allows users to create a post
+    """
+
+    # return render(request, 'create_post.html')

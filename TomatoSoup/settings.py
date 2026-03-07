@@ -115,8 +115,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles" 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Sets the default user as the Author model in golden
+AUTH_USER_MODEL = "Soup.Author"
+
+# Sets the default login page
+LOGIN_URL = "login"
+
+# Sets the default redirect page after login
+LOGIN_REDIRECT_URL = '/home/'
