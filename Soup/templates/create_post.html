@@ -8,15 +8,21 @@
 {% block content %}
 <div class="create-post-page">
   <article class="create-post-card">
-    <header class="create-post-header">
-      <a href="{% url 'home' %}" class="create-post-back" aria-label="Back">
-        <span class="create-post-back-icon" aria-hidden="true">←</span>
-      </a>
-      <h1 class="create-post-title">Create new Post</h1>
-    </header>
-
     <form method="post" action="" enctype="multipart/form-data" class="create-post-form">
       {% csrf_token %}
+      <div class="create-post-top-row">
+        <header class="create-post-header">
+          <a href="{% url 'home' %}" class="create-post-back" aria-label="Back">
+            <span class="create-post-back-icon" aria-hidden="true">←</span>
+          </a>
+          <h1 class="create-post-title">Create new Post</h1>
+        </header>
+        <div class="create-post-actions">
+          <button type="submit" class="create-post-submit">
+            Submit <span class="create-post-submit-icon" aria-hidden="true">✓</span>
+          </button>
+        </div>
+      </div>
 
       <label class="create-post-field">
         <span class="create-post-label">Title</span>
@@ -54,12 +60,6 @@
             <button type="button" class="create-post-clear create-post-clear--picture" id="picture-clear" aria-label="Remove picture" title="Remove"><img src="{% static 'icons/bin.svg' %}" alt="" class="create-post-icon" /></button>
           </div>
         </div>
-      </div>
-
-      <div class="create-post-actions">
-        <button type="submit" class="create-post-submit">
-          Submit <span class="create-post-submit-icon" aria-hidden="true">✓</span>
-        </button>
       </div>
     </form>
   </article>
