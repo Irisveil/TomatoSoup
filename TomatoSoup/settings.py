@@ -129,5 +129,5 @@ AUTH_USER_MODEL = "Soup.Author"
 # Sets the default login page
 LOGIN_URL = "login"
 
-# Sets the default redirect page after login
-LOGIN_REDIRECT_URL = '/home/'
+# Sets the default redirect page after login (home view is at '' not home/)
+LOGIN_REDIRECT_URL = '/'

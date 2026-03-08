@@ -1,16 +1,4 @@
-/* Selection colours / project palette */
-:root {
-  --ts-palette-blue-gray: #577590;
-  --ts-palette-cyan: #00C3D0;
-  --ts-palette-teal: #00C8B3;
-  --ts-palette-green: #34C759;
-  --ts-palette-salmon: #D78A76;
-  --ts-palette-amber: #F2A541;
-  --ts-palette-orange: #F6732F;
-  --ts-palette-yellow: #F8DC3D;
-  --ts-palette-cream: #FEEED5;
-  --ts-palette-white: #FFFFFF;
-}
+/* Auth pages (login & signup) – uses palette from global.css */
 
 section.signup-section {
     width: 40vw;
@@ -18,6 +6,19 @@ section.signup-section {
     margin: auto;
     display: flex;
     flex-flow: column;
+    padding: 1.5rem 0;
+}
+
+section.signup-section header {
+    margin-bottom: 0.5rem;
+}
+
+section.signup-section h2 {
+    font-family: "Ribeye", cursive;
+    font-size: 2rem;
+    color: var(--ts-palette-burnt-orange);
+    margin: 0;
+    letter-spacing: 0.02em;
 }
 
 form {
@@ -28,10 +29,15 @@ form {
 }
 
 p[role='alert'] {
-    background-color: var(--contrast-colour-3-opacity-10);
-    border-radius: 10px;
-    padding: 25px 40px;
-    width: 150px;
+    background-color: rgba(0, 200, 179, 0.12);
+    border: 1px solid var(--ts-palette-teal);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    width: 100%;
+    max-width: 500px;
+    color: var(--ts-palette-dark-teal);
+    font-family: var(--ts-font-body);
+    font-size: 0.95rem;
 }
 
 label {
@@ -39,21 +45,32 @@ label {
     flex-flow: column;
     font-size: 14px;
     gap: 5px;
-    font-family: math;
+    font-family: var(--ts-font-body);
+    color: var(--ts-palette-blue-gray);
+    font-weight: 500;
 }
 
 p.password-text {
     margin-bottom: -10px;
-    font-size: 14px;
-    font-family: auto;
+    font-size: 13px;
+    font-family: var(--ts-font-body);
+    color: var(--ts-palette-blue-gray);
 }
 
-.link {
+section.signup-section .link {
     text-align: center;
-    font-size: 18px;
-    font-family: math;
+    font-size: 1rem;
+    font-family: var(--ts-font-body);
+    color: var(--ts-palette-dark-teal);
+    margin-top: 0.5rem;
 }
 
-button {
+section.signup-section .link:hover,
+section.signup-section .link:focus-visible {
+    color: var(--ts-palette-teal);
+    text-decoration: underline;
+}
+
+section.signup-section button.basic {
     margin-top: 15px;
 }
