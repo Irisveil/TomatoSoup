@@ -295,23 +295,6 @@
   line-height: 1.35;
 }
 
-.post-card-link {
-  display: inline-block;
-  padding: 0.4rem 0.75rem;
-  background-color: var(--ts-palette-teal);
-  color: var(--ts-palette-white);
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  text-decoration: none;
-}
-
-.post-card-link:hover,
-.post-card-link:focus-visible {
-  filter: brightness(1.08);
-  text-decoration: none;
-}
-
 .create-post-btn {
   display: inline-flex;
   align-items: center;

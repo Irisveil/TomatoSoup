@@ -71,6 +71,12 @@
   filter: brightness(1.1);
 }
 
+.home-create-post-btn img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
 .home-my-bowl-list,
 .home-whats-hot-list {
   display: flex;

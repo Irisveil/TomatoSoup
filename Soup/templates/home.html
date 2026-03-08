@@ -10,7 +10,9 @@
     <section class="home-my-bowl" aria-labelledby="my-bowl-heading">
       <div class="home-my-bowl-header">
         <h2 id="my-bowl-heading">My Bowl</h2>
-        <a href="{% url 'new_post' %}" class="home-create-post-btn">Create New Post</a>
+        <a href="{% url 'new_post' %}" class="home-create-post-btn">Create New Post
+          <img src="{% static 'icons/Icon Right_newpost.svg' %}" alt="" aria-hidden="true" />
+        </a>
       </div>
       <div class="home-my-bowl-list">
         {% for post in feed_posts %}
@@ -37,7 +39,7 @@
                 <img src="{{ images.0.image.url }}" alt="" style="max-width: 100%; height: auto; border-radius: 4px;" />
               {% endif %}
             {% endwith %}
-            <p><a href="{% url 'post' post.id %}">View More →</a></p>
+            <p><a href="{% url 'post' post.id %}" class="view-more-btn">View More →</a></p>
           </article>
         {% empty %}
           <p>No posts from your hobbies yet. Pick hobbies on your profile or create a post.</p>

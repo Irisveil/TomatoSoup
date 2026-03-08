@@ -85,7 +85,7 @@
           <div class="post-card-body">
             <h3 class="post-card-title">{{ post.title|default:"Untitled" }}</h3>
             <p class="post-card-desc">{{ post.description|truncatewords:12 }}</p>
-            <a href="{% url 'post' post.id %}" class="post-card-link">View More →</a>
+            <a href="{% url 'post' post.id %}" class="view-more-btn">View More →</a>
           </div>
         </article>
       {% empty %}
