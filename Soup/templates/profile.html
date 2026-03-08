@@ -13,10 +13,14 @@
     <ul class="hobby-list" aria-label="Select hobbies">
       {% for value, label in all_hobbies %}
         <li>
-          <button type="button" class="hobby-btn {% if value in selected_hobby_values %}hobby-btn--selected{% endif %}" data-hobby="{{ value }}" aria-pressed="{% if value in selected_hobby_values %}true{% else %}false{% endif %}">
-            <span class="hobby-btn-check" aria-hidden="true">✓</span>
-            {{ label }}
-          </button>
+          <form name="change-hobby" name="login" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="{{ label }}" value="{{ label }}">
+            <button type="submit" class="hobby-btn {% if value in selected_hobby_values %}hobby-btn--selected{% endif %}" data-hobby="{{ value }}" aria-pressed="{% if value in selected_hobby_values %}true{% else %}false{% endif %}">
+              <span class="hobby-btn-check" aria-hidden="true">✓</span>
+              {{ label }}
+            </button>
+        </form>
         </li>
       {% endfor %}
     </ul>
@@ -37,7 +41,7 @@
         {% csrf_token %}
         <label class="profile-field">
           <span class="profile-field-label">Full Name</span>
-          <input type="text" name="full_name" class="profile-input" value="{{ author.username }}" placeholder="Full Name" />
+          <input type="text" name="username" class="profile-input" value="{{ author.username }}" placeholder="Username" />
         </label>
         <label class="profile-field">
           <span class="profile-field-label">Email</span>

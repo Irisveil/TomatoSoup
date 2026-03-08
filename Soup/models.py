@@ -47,6 +47,7 @@ class Author(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     email = models.CharField(blank=True)
     password = models.CharField(max_length=128, default="thisisapassword")
+    pronouns = models.CharField(max_length=128, default="")
     hobby = JSONField(default='') # This will be a list of strings of hobbies that the user has selected
 
     date_joined = models.DateTimeField(default=timezone.now)

@@ -74,19 +74,44 @@ def profile_view(request):
     Allows users to view their profile
     """
     author = request.user
-    selected = author.hobby if isinstance(author.hobby, list) else []
-    user_posts = (
-        Post.objects.filter(author=author)
-        .prefetch_related("image_set")
-        .order_by("-published")
-    )
-    context = {
-        "author": author,
-        "all_hobbies": HOBBY,
-        "selected_hobby_values": selected,
-        "user_posts": user_posts,
-    }
-    return render(request, "profile.html", context)
+    if request.method == "POST": # if user is editing something
+        req = request.POST
+        if 'email' in req: # updating user information
+            author.username = req['username']
+            author.email = req['email']
+            author.pronouns = req['pronouns']
+            author.save()
+        else: # updating hobby preferences
+            print("no")
+
+        selected = author.hobby if isinstance(author.hobby, list) else []
+        user_posts = (
+            Post.objects.filter(author=author)
+            .prefetch_related("image_set")
+            .order_by("-published")
+        )
+        context = {
+            "author": author,
+            "all_hobbies": HOBBY,
+            "selected_hobby_values": selected,
+            "user_posts": user_posts,
+        }
+        return render(request, "profile.html", context)
+
+    else:
+        selected = author.hobby if isinstance(author.hobby, list) else []
+        user_posts = (
+            Post.objects.filter(author=author)
+            .prefetch_related("image_set")
+            .order_by("-published")
+        )
+        context = {
+            "author": author,
+            "all_hobbies": HOBBY,
+            "selected_hobby_values": selected,
+            "user_posts": user_posts,
+        }
+        return render(request, "profile.html", context)
 
 @login_required
 def post_view(request):
