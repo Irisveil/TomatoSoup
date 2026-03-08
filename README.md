@@ -16,7 +16,7 @@ Use {% block head %} {% endblock %} and {% block content %} {% endblock %} to in
 See home.html for example
 
 
-idea: profile photo, friend system, dynamic topics (admin only)
+idea: profile photo, friend system, dynamic topics (admin only), aria implemented
 
 implement if have time:
 filtering to allow users to peek at other hobbies
