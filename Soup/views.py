@@ -111,10 +111,22 @@ def profile_view(request):
     return render(request, "profile.html", context)
 
 @login_required
-def post_view(request):
+def post_view(request, post_id):
     """
     Viewing a post and allows users to comment
     """
+    post = get_object_or_404(Post, pk=post_id)
+    author = post.author
+    comments = Comment.objects.filter(post_id=post_id)
+    images = Comment.objects.filter(post_id=post_id)
+    context = {
+        "post": post,
+        "author": author,
+        "comments": comments,
+        "images": images
+    }
+
+    return render(request, "post.html", context)
 
 @login_required
 def create_post_view(request):

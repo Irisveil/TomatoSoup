@@ -7,4 +7,16 @@
 
 {% block content %}
 <!-- This is passed the Post (alias: post) object from models and the Author (alias: author) object from models -->
+<!-- comments are passed as comments (list), images are passed as images (list) -->
+
+<form method="post" action="">
+    {% csrf_token %}
+
+    <label>
+        <span>comment</span>
+        <textarea id="comment" name="comment" rows="5" cols="30" placeholder="Comment on..."></textarea>
+    </label>
+
+    <button type="submit">Post</button>
+</form>
 {% endblock %}
