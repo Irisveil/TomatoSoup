@@ -157,7 +157,7 @@ def post_view(request, post_id):
 
     author = post.author
     comments = Comment.objects.filter(post_id=post_id).order_by("-published")
-    images = Image.objects.filter(post_id=post_id).order_by("-order")
+    images = Image.objects.filter(post_id=post_id).order_by("order")
     print(len(images))
 
     if request.method == "POST":

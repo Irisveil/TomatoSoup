@@ -250,16 +250,19 @@
   background-color: #fff;
   border: 1px solid rgba(43, 43, 43, 0.12);
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 1px 2px rgba(43, 43, 43, 0.06);
 }
 
 .post-card-image {
-  aspect-ratio: 1;
   background-color: #eee;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.post-card-image > img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .post-card-image img {
