@@ -1,6 +1,9 @@
 # PIPELINE FUNCTIONS FOUR OUR DISCUSSION AGENT
 
 import hashlib
+import json
+import os
+import re
 from datetime import timedelta
 from difflib import SequenceMatcher
 
@@ -178,13 +181,65 @@ def rank_revival_candidates(limit = 20):
 
 def generate_discussion_post(title_seed, summary_seed, tag_slugs):
     tags_text = ", ".join(tag_slugs[:3]) if tag_slugs else 'community'
-    title = f"Community Topic: {title_seed[:220]}"
-    body = (
+    fallback_title = f"Community Topic: {title_seed[:220]}"
+    fallback_body = (
         f"{summary_seed[:800]}\n\n"
         f"What do you think about this in the context of {tags_text}?"
     )
 
-    return title, body
+    api_key = os.getenv("CHUTES_API_KEY", "").strip()
+    api_url = os.getenv("CHUTES_API_URL", "").strip()
+    model_name = os.getenv("CHUTES_MODEL", "").strip()
+
+    # Keep deterministic fallback when env vars are not configured.
+    if not api_key or not api_url or not model_name:
+        return fallback_title, fallback_body
+
+    prompt = (
+        "Write a short community discussion post for university students.\n"
+        "Return STRICT JSON with keys: title, body.\n"
+        "Rules:\n"
+        "- Title max 120 chars\n"
+        "- Body max 700 chars\n"
+        "- Friendly and neutral tone\n"
+        "- End body with one open-ended discussion question\n"
+        "- No hashtags and no emojis\n"
+        f"Hobby tags: {tags_text}\n"
+        f"Seed title: {title_seed}\n"
+        f"Seed summary: {summary_seed}\n"
+    )
+
+    payload = {
+        "model": model_name,
+        "temperature": 0.7,
+        "messages": [
+            {"role": "system", "content": "You create safe student discussion prompts."},
+            {"role": "user", "content": prompt},
+        ],
+    }
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        resp = requests.post(api_url, headers=headers, json=payload, timeout=20)
+        resp.raise_for_status()
+        data = resp.json()
+        content = data["choices"][0]["message"]["content"]
+
+        # Handle content wrapped in markdown fences.
+        cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", content.strip(), flags=re.IGNORECASE | re.MULTILINE)
+        parsed = json.loads(cleaned)
+        title = (parsed.get("title") or fallback_title)[:300]
+        body = (parsed.get("body") or fallback_body)[:1000]
+
+        if not title.strip() or not body.strip():
+            return fallback_title, fallback_body
+        return title, body
+    except Exception:
+        return fallback_title, fallback_body
 
 def _similarity(a, b):
     return SequenceMatcher(None, a.lower(), b.lower()).ratio()

@@ -21,6 +21,15 @@
               {% endif %}
             </h3>
             <p>By {{ post.author.username }} • {{ post.published|date:"M d, Y H:i" }}</p>
+            {% if post.agent_meta and post.agent_meta.revived_from_post %}
+              <p>
+                Inspired by:
+                <a href="{% url 'post' post.agent_meta.revived_from_post.id %}">
+                  {{ post.agent_meta.revived_from_post.title|default:"an earlier community post" }}
+                </a>
+                by {{ post.agent_meta.revived_from_post.author.username }}
+              </p>
+            {% endif %}
             <p>{{ post.description|truncatewords:30 }}</p>
             <p>Views: {{ post.views }}</p>
             {% with post.image_set.all as images %}
@@ -50,7 +59,14 @@
                 <span class = "ai-topic-badge">AI Topic</span>
               {% endif %}              
             </strong><br />
-            <small>{{ post.author.username }} • {{ post.views }} views</small>
+            <small>{{ post.author.username }} • {{ post.views }} views</small><br />
+            {% if post.agent_meta and post.agent_meta.revived_from_post %}
+              <small>
+                Inspired by:
+                  {{ post.agent_meta.revived_from_post.title|default:"an earlier community post" }}
+                  by {{ post.agent_meta.revived_from_post.author.username }}
+              </small>
+            {% endif %}            
           </a>
         {% empty %}
           <p>No posts yet.</p>

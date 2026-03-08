@@ -6,3 +6,6 @@ __pycache__
 
 # database
 db.sqlite3
+
+# local env vars / secrets
+.env
