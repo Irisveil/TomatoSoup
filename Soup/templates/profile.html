@@ -49,7 +49,7 @@
         </label>
         <label class="profile-field">
           <span class="profile-field-label">Pronouns</span>
-          <input type="text" name="pronouns" class="profile-input" placeholder="Pronouns" />
+          <input type="text" name="pronouns" class="profile-input" placeholder="Pronouns" value="{{ author.pronouns|default:'' }}"/>
         </label>
         <div class="profile-hobbies-tags">
           <span class="profile-field-label">Hobbies</span>
