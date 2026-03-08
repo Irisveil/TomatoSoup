@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE HTML> 
+<html lang="en">
+    <head>
+        {% block head %}
+            <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+        {% endblock %}
+    </head> 
+
+    <body>
+        {% block content %}
+            <section class="signup-section">
+                <header>
+                    <h2>Login In</h2>
+                </header>
+
+                <form name="signup" name="login" method="POST" enctype="application/x-www-form-urlencoded">
+                    {% csrf_token %}
+
+                    <label>
+                        Username
+                        <input class="basic" name="username" aria-label="username" autocomplete="username">
+                    </label>
+                    <label>
+                        Password
+                        <input class="basic" name="password" aria-label="password" autocomplete="off">
+                    </label>
+
+                    <button class="basic" type="submit">Log In</button>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+
+                {% if next %}
+                    <a class="link" href="{% url 'signup' %}?next={{ next }}">I don't have an account</a>
+                {% else %}
+                    <a class="link" href="{% url 'signup' %}">I don't have an account</a>
+                {% endif %}
+
+                <div>
+                    <!-- Alerts the user when credentials are incorrect -->
+                    {% if form.errors and request.method == "POST" %}
+                        <p style="width: 500px;" class="large" role="alert">
+                            {% if form.errors.username %}
+                                Username: {{ form.errors.username.0 }}
+                            {% elif form.errors.email %}
+                                Email: {{ form.errors.email.0 }}
+                            {% elif form.errors.password1 %}
+                                Password: {{ form.errors.password1.0 }}
+                            {% elif form.errors.password2 %}
+                                Password Confirm: {{ form.errors.password2.0 }}
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                </div>
+                
+            </section>
+        {% endblock %}
+    </body>
+</html>

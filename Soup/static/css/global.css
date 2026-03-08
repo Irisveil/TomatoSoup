@@ -192,3 +192,33 @@ a:focus-visible {
     flex-wrap: wrap;
   }
 }
+
+
+/* Common components */
+input.basic {
+    background-color: white;
+    border: 2px solid #CBD2E0;
+    border-radius: 4px;
+    padding: 5px 15px;
+    height: 45px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: "Ribeye", cursive;
+}
+
+input.basic:hover {
+    background-color: #ededed;
+}
+
+button.basic {
+    background-color: #587DBD;
+    height: 45px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button.basic:hover {
+    filter: brightness(1.1);
+}
