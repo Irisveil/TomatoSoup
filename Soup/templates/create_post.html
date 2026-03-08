@@ -67,12 +67,11 @@
 
 <script>
 (function() {
-  var zone = document.getElementById('picture-upload-zone');
   var input = document.getElementById('picture-input');
   var inner = document.getElementById('picture-upload-inner');
   var actions = document.getElementById('picture-upload-actions');
   var clearBtn = document.getElementById('picture-clear');
-  if (!zone || !input) return;
+  if (!input) return;
 
   function showFile() {
     inner.setAttribute('hidden', '');
@@ -83,11 +82,6 @@
     inner.removeAttribute('hidden');
     input.value = '';
   }
-
-  zone.addEventListener('click', function(e) {
-    if (e.target === clearBtn || e.target.closest('.create-post-clear--picture')) return;
-    input.click();
-  });
   input.addEventListener('change', function() {
     if (input.files && input.files.length) showFile();
     else showPlaceholder();
