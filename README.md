@@ -49,8 +49,15 @@ Figma design: [TomatoSoup (Figma)](https://www.figma.com/design/buGsOhi4ZlIvRWBQ
 
 ### Roadmap / ideas
 
-- *If time allows:* filtering to peek at other hobbies, “most viewed in the past 7 days.”
-- Create a new tab where user can access more feeds specific to the hobby (Look into different "Bowls")
+*If time allows:*
+- Filtering to allow users to peek at other hobbies.
+- Dynamic topics (adding/removing hobby topics by the admin).
+- Custom profile photo uploading.
+- Hottest topic should be filtered to only show the most viewed from the past 7 days.
+- Automate AI generation to follow specific frequencies (e.g. once per day, once per week, etc)
+- Markdown support
+- Chips for hobby identification on posts
+- Get this bad boy up so that we don't have anymore db issues between the three of us
 
 ---
 
