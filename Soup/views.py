@@ -121,5 +121,7 @@ def create_post_view(request):
     """
     Allows users to create a post
     """
+    context = {"all_hobbies": HOBBY}
+    return render(request, "create_post.html", context)
 
     # return render(request, 'create_post.html')

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<!-- <link rel="stylesheet" href="{% static 'css/post.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+
+  <section>
+    <h2>
+      Create Post
+    </h2>
+    <div>
+      <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>
+          <span>Title</span>
+          <input type="text" name="title" placeholder="title" required/>
+        </label>
+
+        <label>
+          <span>Category</span>
+          <select name="hobby" required>
+            {% for value, label in all_hobbies %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label>
+          <span>Content</span>
+          <textarea id="post_content" name="content" rows="5" cols="30" placeholder="Start typing..."></textarea>
+        </label>
+
+        <label>
+          <span>Content</span>
+          <input type="file" name="image" accept="image/*">
+        </label>
+
+        <button type="submit">Post</button>
+      </form>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
