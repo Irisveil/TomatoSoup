@@ -1,7 +1,7 @@
 # PIPELINE FUNCTIONS FOUR OUR DISCUSSION AGENT
 
 import hashlib
-import datetime import timedelta
+from datetime import timedelta
 from difflib import SequenceMatcher
 
 import feedparser
@@ -285,7 +285,7 @@ def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
                 candidate.status = TopicCandidate.Status.POSTED
                 candidate.save(update_fields=["status"])
                 posts_created += 1    
-                        
+
         # Revival posts
         revival_ranked = rank_revival_candidates(limit=20)
         for post, score in revival_ranked[:revival_cap]:
