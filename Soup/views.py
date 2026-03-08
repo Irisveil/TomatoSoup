@@ -35,39 +35,33 @@ def signup_view(request):
 
 @login_required
 def home_view(request):
-    # IS this bittttch logged in?
     author = request.user
 
-    # Author's feed of posts with others that share their hobby
-    feed_posts = (
-        Post.objects
-        .select_related("author")
-        .prefetch_related("image_set")
-        # TODO: 
-        .filter(author__hobbies__in=author.hobbies.all())
-        .distinct()
-        .order_by("-published")
-    )
-    
-    # Spotlight on either the newest or the most views
-    spotlight_feed = request.GET.get("spotlight", "newest")
-    if spotlight_feed == "views":
-        spotlight_feed = Post.objects.order_by("-views")[:5]
+    # My Bowl: posts from hobbies the user follows (popular-ish, newest first)
+    author_hobbies = author.hobby if isinstance(author.hobby, list) and author.hobby else []
+    if author_hobbies:
+        feed_posts = (
+            Post.objects
+            .select_related("author")
+            .prefetch_related("image_set")
+            .filter(hobby__in=author_hobbies)
+            .order_by("-views", "-published")
+        )
     else:
-        spotlight_feed = Post.objects.order_by("-published")[:5]
+        feed_posts = Post.objects.none()
 
-    # Live chat
-    live_chat = (
-        Comment.objects
-        .select_related("author", "post")
-        .order_by("-published")[:15]
-    )
+    # What's Hot: hot posts by views (or newest via ?spotlight=newest)
+    spotlight_feed = request.GET.get("spotlight", "views")
+    if spotlight_feed == "newest":
+        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-published")[:10]
+    else:
+        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-views")[:10]
 
     context = {
         "author": author,
         "feed_posts": feed_posts,
-        "spotlight_feed": spotlight_feed,
-        "live_chat": live_chat,
+        "whats_new_posts": whats_new_posts,
+        "spotlight_mode": spotlight_feed,
     }
 
     return render(request, "home.html", context)
