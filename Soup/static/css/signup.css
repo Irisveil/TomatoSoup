@@ -1,0 +1,45 @@
+section.signup-section {
+    width: 40vw;
+    min-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-flow: column;
+}
+
+form {
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+    margin: 30px 0;
+}
+
+p[role='alert'] {
+    background-color: var(--contrast-colour-3-opacity-10);
+    border-radius: 10px;
+    padding: 25px 40px;
+    width: 150px;
+}
+
+label {
+    display: flex;
+    flex-flow: column;
+    font-size: 14px;
+    gap: 5px;
+    font-family: math;
+}
+
+p.password-text {
+    margin-bottom: -10px;
+    font-size: 14px;
+    font-family: auto;
+}
+
+.link {
+    text-align: center;
+    font-size: 18px;
+    font-family: math;
+}
+
+button {
+    margin-top: 15px;
+}
