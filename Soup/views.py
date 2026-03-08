@@ -1,12 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Author, Post, Comment, HOBBY
+from django.contrib.auth import logout
 
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 
+# custom forms
+class CustomForm(UserCreationForm):
+    username = forms.CharField(max_length=100, required=True)
+    email = forms.CharField(max_length=100, required=True)
+    password1 = forms.CharField(max_length=20, required=True)
+    password2 = forms.CharField(max_length=20, required=True)
+
+    class Meta(UserCreationForm.Meta):
+        model = Author
+        fields = ('username', 'password1', 'password2', 'email')
 
 def signup_view(request):
+    logout(request)
 
-    return render(request, 'signup.html')
+    if request.method == "POST": # if user signing up
+        form = CustomForm(request.POST)
+        
+        # validate inputs
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            return redirect('profile')
+    else:
+        form = CustomForm()
+
+    return render(request, "signup.html", {"form": form})
 
 @login_required
 def home_view(request):
