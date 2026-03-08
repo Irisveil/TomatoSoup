@@ -1,1 +1,95 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-layout">
+  <!-- Left: Hobbies -->
+  <aside class="profile-col profile-col--hobbies">
+    <h2 class="profile-col-title">Hobbies</h2>
+    <ul class="hobby-list" aria-label="Select hobbies">
+      {% for value, label in all_hobbies %}
+        <li>
+          <button type="button" class="hobby-btn {% if value in selected_hobby_values %}hobby-btn--selected{% endif %}" data-hobby="{{ value }}" aria-pressed="{% if value in selected_hobby_values %}true{% else %}false{% endif %}">
+            <span class="hobby-btn-check" aria-hidden="true">✓</span>
+            {{ label }}
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <!-- Middle: My Profile -->
+  <section class="profile-col profile-col--main">
+    <h2 class="profile-col-title">
+      My Profile
+      <span class="profile-col-title-arrow" aria-hidden="true">→</span>
+      <span class="profile-display-name">{{ author.username }}</span>
+    </h2>
+    <div class="profile-card">
+      <div class="profile-avatar" aria-hidden="true">
+        <img src="{% static 'icons/Component 1_chefprofile.svg' %}" alt="" />
+      </div>
+      <form class="profile-form" method="post" action="">
+        {% csrf_token %}
+        <label class="profile-field">
+          <span class="profile-field-label">Full Name</span>
+          <input type="text" name="full_name" class="profile-input" value="{{ author.username }}" placeholder="Full Name" />
+        </label>
+        <label class="profile-field">
+          <span class="profile-field-label">Email</span>
+          <input type="email" name="email" class="profile-input" value="{{ author.email|default:'' }}" placeholder="Email" />
+        </label>
+        <label class="profile-field">
+          <span class="profile-field-label">Pronouns</span>
+          <input type="text" name="pronouns" class="profile-input" placeholder="Pronouns" />
+        </label>
+        <div class="profile-hobbies-tags">
+          <span class="profile-field-label">Hobbies</span>
+          <div class="hobby-tags" aria-label="Selected hobbies">
+            {% for value, label in all_hobbies %}
+              {% if value in selected_hobby_values %}
+                <span class="hobby-tag">{{ label }}</span>
+              {% endif %}
+            {% endfor %}
+            {% if not selected_hobby_values %}
+              <span class="hobby-tags-empty">None selected</span>
+            {% endif %}
+          </div>
+        </div>
+        <button type="submit" class="profile-save-btn">Save changes</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Right: My Posts -->
+  <aside class="profile-col profile-col--posts">
+    <h2 class="profile-col-title">My Posts</h2>
+    <div class="post-cards">
+      {% for post in user_posts %}
+        <article class="post-card">
+          <div class="post-card-image">
+            {% with post.image_set.all as images %}
+              {% if images %}
+                <img src="{{ images.0.image.url }}" alt="" />
+              {% else %}
+                <span class="post-card-image-placeholder" aria-hidden="true">📷</span>
+              {% endif %}
+            {% endwith %}
+          </div>
+          <div class="post-card-body">
+            <h3 class="post-card-title">{{ post.title|default:"Untitled" }}</h3>
+            <p class="post-card-desc">{{ post.description|truncatewords:12 }}</p>
+            <a href="{% url 'post' post.id %}" class="post-card-link">View More →</a>
+          </div>
+        </article>
+      {% empty %}
+        <p class="post-cards-empty">No posts yet.</p>
+      {% endfor %}
+    </div>
+    <a href="{% url 'new_post' %}" class="create-post-btn">
+      <img src="{% static 'icons/Icon Right_newpost.svg' %}" alt="" aria-hidden="true" />
+      Create New Post
+    </a>
+  </aside>
+</div>
+{% endblock %}
