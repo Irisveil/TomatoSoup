@@ -304,3 +304,12 @@
     font-size: 1.5rem;
   }
 }
+
+.post-content-section {
+  margin: 10px 0;
+  background-color: var(--ts-color-bg);
+}
+
+.post-comment-section {
+  align-self: center;
+}

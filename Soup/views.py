@@ -96,8 +96,10 @@ def profile_view(request):
                 hobbi.remove(req['hobby'])
                 author.hobby = json.dumps(hobbi)
                 author.save()
-
-    selected = json.loads(author.hobby)
+    if author.hobby == '':
+        selected = []
+    else:
+        selected = json.loads(author.hobby)
     user_posts = (
         Post.objects.filter(author=author)
         .prefetch_related("image_set")
