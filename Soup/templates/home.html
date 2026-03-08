@@ -15,7 +15,11 @@
       <div class="home-my-bowl-list">
         {% for post in feed_posts %}
           <article>
-            <h3>{{ post.title|default:"Untitled Post" }}</h3>
+            <h3>{{ post.title|default:"Untitled Post" }}
+              {% if post.agent_meta %}
+                <span class = "ai-topic-badge">AI Topic</span>
+              {% endif %}
+            </h3>
             <p>By {{ post.author.username }} • {{ post.published|date:"M d, Y H:i" }}</p>
             <p>{{ post.description|truncatewords:30 }}</p>
             <p>Views: {{ post.views }}</p>
@@ -34,10 +38,18 @@
 
     <section class="home-whats-hot" aria-labelledby="whats-hot-heading">
       <h2 id="whats-hot-heading">What's Hot</h2>
+      <p class = "spotlight-toggle">
+        <a href="?spotlight=views">Most Viewed</a> |
+        <a href="?spotlight=newest">Newest</a>
+      </p>
       <div class="home-whats-hot-list">
         {% for post in whats_new_posts %}
           <a href="{% url 'post' post.id %}" class="home-post-teaser">
-            <strong>{{ post.title|default:"Untitled Post" }}</strong><br />
+            <strong>{{ post.title|default:"Untitled Post" }}
+              {% if post.agent_meta %}
+                <span class = "ai-topic-badge">AI Topic</span>
+              {% endif %}              
+            </strong><br />
             <small>{{ post.author.username }} • {{ post.views }} views</small>
           </a>
         {% empty %}

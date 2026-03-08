@@ -262,7 +262,7 @@ def ai_posted_recently(hobby_value, hours = 24):
     cutoff = timezone.now() - timedelta(hours = hours)
 
     return PostAgentMeta.objects.filter(
-        post__hobby - hobby_value,
+        post__hobby = hobby_value,
         post__published__gte = cutoff,
     ).exists()
 
@@ -291,14 +291,11 @@ def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
             hobby_value = "PLANTS"
             if tag_slugs:
                 candidate_hobby = tag_slugs[0].upper()
-                valid_choices = dict(Post._meta.get_failed("hobby").choices)
+                valid_choices = dict(Post._meta.get_field("hobby").choices)
                 if candidate_hobby in valid_choices:
                     hobby_value = candidate_hobby
             
             if ai_posted_recently(hobby_value, hours = 24):
-                continue
-
-            if ai_posted_recently(post.hobby, hours = 24):
                 continue
 
             if not dry_run:
@@ -323,6 +320,9 @@ def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
             title, body = generate_discussion_post(f"Revisit: {seed}", summary, tags)
             ok, _reason = safety_filter(title, body, tags)
             if not ok:
+                continue
+
+            if ai_posted_recently(post.hobby, hours = 24):
                 continue
 
             if not dry_run:

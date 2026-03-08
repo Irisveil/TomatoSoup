@@ -139,3 +139,23 @@
     flex-direction: column;
   }
 }
+
+.ai-topic-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-family: var(--ts-font-body);
+  font-weight: 700;
+  background: #1f7a8c;
+  color: #fff;
+  vertical-align: middle;
+}
+
+.spotlight-toggle {
+  margin: 0.25rem 0 1rem;
+  font-family: var(--ts-font-body);
+  font-size: 0.9rem;
+}
+

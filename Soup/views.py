@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Author, Post, Comment, HOBBY, Image
+from .models import Author, Post, Comment, HOBBY, Image, PostAgentMeta
 from django.contrib.auth import logout
 from django.db import transaction
 
@@ -39,34 +39,66 @@ def signup_view(request):
 def home_view(request):
     author = request.user
 
+    if isinstance(author.hobby, list):
     # My Bowl: posts from hobbies the user follows (popular-ish, newest first)
-    if author.hobby == '':
-        author_hobbies = []
-    else:
+        author_hobbies = author.hobby
+    elif author.hobby:
         author_hobbies = json.loads(author.hobby)
+    else:
+        author_hobbies = []
     
-    if len(author_hobbies) > 0:
+    # BOWL FEEEEEEEEED
+    if author_hobbies:
         feed_posts = (
             Post.objects
             .select_related("author")
             .prefetch_related("image_set")
+            .select_related("agent_meta")
             .filter(hobby__in=author_hobbies)
             .order_by("-published")
         )
     else:
-        feed_posts = Post.objects.none()
+        feed_posts = (
+            Post.objects
+            .select_related("author")
+            .prefetch_related("image_set")
+            .select_related("agent_meta")
+            .order_by("-published")[:20]
+        )
 
     # What's Hot: hot posts by views (or newest via ?spotlight=newest)
     spotlight_feed = request.GET.get("spotlight", "views")
-    if spotlight_feed == "newest":
-        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-published")[:10]
-    else:
-        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-views")[:10]
+    base_qs = (
+        Post.objects
+        .select_related("author")
+        .select_related("agent_meta")
+        .prefetch_related("image_set")
+    )
 
+    if spotlight_feed == "newest":
+        # whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-published")[:10]
+        whats_new_posts = list(base_qs.order_by("-published")[:30])     
+    else:
+        #whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-views")[:10]
+        whats_new_posts = list(base_qs.order_by("-views", "-published")[:30])
+
+    spotlight_size = 10
+    max_ai = int(spotlight_size * 0.40) # Cap AI shit by 40%
+
+    ai_posts = [p for p in whats_new_posts if hasattr(p, "agent_meta")]
+    peep_posts = [p for p in whats_new_posts if not hasattr(p, "agent_meta")]
+
+    spotlight_posts = []
+    spotlight_posts.extend(ai_posts[:max_ai])
+    spotlight_posts.extend(peep_posts[:spotlight_size - len(spotlight_posts)])
+
+    if len(spotlight_posts) < spotlight_size:
+        leftovers = [p for p in whats_new_posts if p not in spotlight_posts]
+        spotlight_posts.extend(leftovers[:spotlight_size - len(spotlight_posts)])
     context = {
         "author": author,
         "feed_posts": feed_posts,
-        "whats_new_posts": whats_new_posts,
+        "whats_new_posts": spotlight_posts,
         "spotlight_mode": spotlight_feed,
     }
 
