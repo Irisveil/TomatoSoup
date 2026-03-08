@@ -6,7 +6,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name="login.html"), name='login'),
     path('signup/', views.signup_view, name='signup'),
 
-    path('/', views.home_view, name='home'),
+    path('', views.home_view, name='home'),
     path('profile/', views.profile_view, name='profile'),
 
     path('post/<str:post_id>/', views.post_view, name='post'),
