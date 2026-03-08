@@ -54,10 +54,8 @@
         <div class="profile-hobbies-tags">
           <span class="profile-field-label">Hobbies</span>
           <div class="hobby-tags" aria-label="Selected hobbies">
-            {% for value, label in all_hobbies %}
-              {% if value in selected_hobby_values %}
-                <span class="hobby-tag">{{ label }}</span>
-              {% endif %}
+            {% for value in selected_hobby_values %}
+                <span class="hobby-tag">{{ value }}</span>
             {% endfor %}
             {% if not selected_hobby_values %}
               <span class="hobby-tags-empty">None selected</span>
