@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Author, Post, Comment, HOBBY
+from .models import Author, Post, Comment, HOBBY, Image
 from django.contrib.auth import logout
+from django.db import transaction
 
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -119,6 +120,7 @@ def post_view(request, post_id):
     author = post.author
     comments = Comment.objects.filter(post_id=post_id)
     images = Comment.objects.filter(post_id=post_id)
+    # TODO: also update the view number on this post
     context = {
         "post": post,
         "author": author,
@@ -133,7 +135,35 @@ def create_post_view(request):
     """
     Allows users to create a post
     """
-    context = {"all_hobbies": HOBBY}
-    return render(request, "create_post.html", context)
 
-    # return render(request, 'create_post.html')
+    if request.method == "POST": # if user is posting the new post
+        req = request.POST
+        images = request.FILES.getlist("images")
+
+        # TODO: sanitize the content?
+
+        with transaction.atomic(): # make sure everything in together
+            post = Post.objects.create(
+                author=request.user,
+                title=req['title'],
+                description=req['content'],
+                hobby=req['hobby'],
+                views=0
+            )
+            post.save()
+
+            i = 0
+            for img in images:
+                image = Image.objects.create(
+                    post=post,
+                    image=img,
+                    order=i
+                )
+                image.save()
+                i += 1
+        # redirect to home page
+        return redirect('home')
+        
+    else:
+        context = {"all_hobbies": HOBBY}
+        return render(request, "create_post.html", context)
