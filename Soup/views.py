@@ -40,8 +40,14 @@ def home_view(request):
     author = request.user
 
     # My Bowl: posts from hobbies the user follows (popular-ish, newest first)
-    author_hobbies = author.hobby if isinstance(author.hobby, list) and author.hobby else []
-    if author_hobbies:
+    if author.hobby == '':
+        author_hobbies = []
+    else:
+        author_hobbies = json.loads(author.hobby)
+    
+    print(author_hobbies)
+    
+    if len(author_hobbies) > 0:
         feed_posts = (
             Post.objects
             .select_related("author")
@@ -67,8 +73,6 @@ def home_view(request):
     }
 
     return render(request, "home.html", context)
-
-    #return render(request, 'home.html')
 
 @login_required
 def profile_view(request):
