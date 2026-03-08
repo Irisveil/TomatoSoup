@@ -2,48 +2,101 @@
 {% load static %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/post.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/create_post.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="profile-layout">
+<div class="create-post-page">
+  <article class="create-post-card">
+    <header class="create-post-header">
+      <a href="{% url 'home' %}" class="create-post-back" aria-label="Back">
+        <span class="create-post-back-icon" aria-hidden="true">←</span>
+      </a>
+      <h1 class="create-post-title">Create new Post</h1>
+    </header>
 
-  <section>
-    <h2>
-      Create Post
-    </h2>
-    <div>
-      <form method="post" action="" enctype="multipart/form-data">
-        {% csrf_token %}
+    <form method="post" action="" enctype="multipart/form-data" class="create-post-form">
+      {% csrf_token %}
 
-        <label>
-          <span>Title</span>
-          <input type="text" name="title" placeholder="title" required/>
-        </label>
+      <label class="create-post-field">
+        <span class="create-post-label">Title</span>
+        <input type="text" name="title" class="create-post-input" placeholder="Value" required />
+      </label>
 
-        <label>
-          <span>Category</span>
-          <select name="hobby" required>
-            {% for value, label in all_hobbies %}
-                <option value="{{ value }}">{{ label }}</option>
-            {% endfor %}
-          </select>
-        </label>
+      <label class="create-post-field">
+        <span class="create-post-label">Hobbies</span>
+        <select name="hobby" class="create-post-select" required>
+          <option value="">Select</option>
+          {% for value, label in all_hobbies %}
+            <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
 
-        <label>
-          <span>Content</span>
-          <textarea id="post_content" name="content" rows="5" cols="30" placeholder="Start typing..."></textarea>
-        </label>
+      <label class="create-post-field create-post-field--body">
+        <span class="create-post-label">Body</span>
+        <div class="create-post-body-wrap">
+          <textarea id="post_content" name="content" class="create-post-textarea" rows="5" placeholder="Start typing..."></textarea>
+          <button type="button" class="create-post-clear create-post-clear--body" aria-label="Clear body" title="Clear"><img src="{% static 'icons/bin.svg' %}" alt="" class="create-post-icon" /></button>
+        </div>
+      </label>
 
-        <label>
-          <span>Content</span>
-          <input type="file" name="image" accept="image/*">
-        </label>
+      <div class="create-post-field create-post-field--picture">
+        <span class="create-post-label">Picture</span>
+        <div class="create-post-upload" id="picture-upload-zone">
+          <input type="file" name="image" id="picture-input" class="create-post-file-input" accept="image/*" />
+          <div class="create-post-upload-inner" id="picture-upload-inner">
+            <img src="{% static 'icons/WF Icon Button_add.svg' %}" alt="" class="create-post-upload-plus create-post-icon" aria-hidden="true" />
+            <span class="create-post-upload-text">Please insert file here</span>
+          </div>
+          <div class="create-post-upload-actions" id="picture-upload-actions" hidden>
+            <img src="{% static 'icons/picture.svg' %}" alt="" class="create-post-upload-preview create-post-icon" aria-hidden="true" />
+            <button type="button" class="create-post-clear create-post-clear--picture" id="picture-clear" aria-label="Remove picture" title="Remove"><img src="{% static 'icons/bin.svg' %}" alt="" class="create-post-icon" /></button>
+          </div>
+        </div>
+      </div>
 
-        <button type="submit">Post</button>
-      </form>
-    </div>
-  </section>
-
+      <div class="create-post-actions">
+        <button type="submit" class="create-post-submit">
+          Submit <span class="create-post-submit-icon" aria-hidden="true">✓</span>
+        </button>
+      </div>
+    </form>
+  </article>
 </div>
+
+<script>
+(function() {
+  var zone = document.getElementById('picture-upload-zone');
+  var input = document.getElementById('picture-input');
+  var inner = document.getElementById('picture-upload-inner');
+  var actions = document.getElementById('picture-upload-actions');
+  var clearBtn = document.getElementById('picture-clear');
+  if (!zone || !input) return;
+
+  function showFile() {
+    inner.setAttribute('hidden', '');
+    actions.removeAttribute('hidden');
+  }
+  function showPlaceholder() {
+    actions.setAttribute('hidden', '');
+    inner.removeAttribute('hidden');
+    input.value = '';
+  }
+
+  zone.addEventListener('click', function(e) {
+    if (e.target === clearBtn || e.target.closest('.create-post-clear--picture')) return;
+    input.click();
+  });
+  input.addEventListener('change', function() {
+    if (input.files && input.files.length) showFile();
+    else showPlaceholder();
+  });
+  if (clearBtn) clearBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); showPlaceholder(); });
+
+  var bodyClear = document.querySelector('.create-post-clear--body');
+  var textarea = document.querySelector('.create-post-textarea');
+  if (bodyClear && textarea) bodyClear.addEventListener('click', function() { textarea.value = ''; });
+})();
+</script>
 {% endblock %}
