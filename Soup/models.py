@@ -170,7 +170,7 @@ class PostAgentMeta(models.Model):
     post = models.OneToOneField(Post, on_delete = models.CASCADE, related_name='agent_meta')
     origin_type = models.CharField(max_length = 30, choices = OriginType.choices)
 
-    topic_cadidate = models.ForeignKey(
+    topic_candidate = models.ForeignKey(
         TopicCandidate,
         on_delete = models.SET_NULL,
         null = True,
@@ -193,7 +193,7 @@ class PostAgentMeta(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check = Q(topic_candidate_isnull = False) | Q(revived_from_post_isnull = False),
+                check = Q(topic_candidate__isnull = False) | Q(revived_from_post__isnull = False),
                 name = 'post_agent_meta_origin_link',
             )
         ]
