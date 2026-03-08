@@ -26,8 +26,15 @@ HOBBY_KEYWORDS = {
 }
 
 RSS_SOURCES = [
-    # PUT SOME IN HERE? ARE THERE FREE ONES?
+    ("Gutenberg Today", "https://www.gutenberg.org/cache/epub/feeds/today.rss"),
+    ("Guardian Books", "https://www.theguardian.com/books/rss"),
+    ("Guardian Film", "https://www.theguardian.com/film/rss"),
+    ("Guardian Games", "https://www.theguardian.com/games/rss"),
+    ("Guardian Art and Design", "https://www.theguardian.com/artanddesign/rss"),
+    ("Guardian Travel", "https://www.theguardian.com/uk/travel/rss"),
+    ("Guardian Life and Style", "https://www.theguardian.com/lifeandstyle/rss"),
 ]
+
 
 # Optional local event endpoint places
 EVENT_API_URLS = []
