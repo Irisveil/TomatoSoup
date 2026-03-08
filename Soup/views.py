@@ -12,26 +12,27 @@ def signup_view(request):
 
 @login_required
 def home_view(request):
-    # IS this bittttch logged in?
     author = request.user
 
-    # Author's feed of posts with others that share their hobby
-    feed_posts = (
-        Post.objects
-        .select_related("author")
-        .prefetch_related("image_set")
-        # TODO: 
-        .filter(author__hobbies__in=author.hobbies.all())
-        .distinct()
-        .order_by("-published")
-    )
-    
-    # Spotlight on either the newest or the most views
+    # My Bowl: posts from hobbies the user follows (popular-ish, newest first)
+    author_hobbies = author.hobby if isinstance(author.hobby, list) and author.hobby else []
+    if author_hobbies:
+        feed_posts = (
+            Post.objects
+            .select_related("author")
+            .prefetch_related("image_set")
+            .filter(hobby__in=author_hobbies)
+            .order_by("-views", "-published")
+        )
+    else:
+        feed_posts = Post.objects.none()
+
+    # What's New: newest posts (or What's Hot by views via ?spotlight=views)
     spotlight_feed = request.GET.get("spotlight", "newest")
     if spotlight_feed == "views":
-        spotlight_feed = Post.objects.order_by("-views")[:5]
+        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-views")[:10]
     else:
-        spotlight_feed = Post.objects.order_by("-published")[:5]
+        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-published")[:10]
 
     # Live chat
     live_chat = (
@@ -43,7 +44,8 @@ def home_view(request):
     context = {
         "author": author,
         "feed_posts": feed_posts,
-        "spotlight_feed": spotlight_feed,
+        "whats_new_posts": whats_new_posts,
+        "spotlight_mode": spotlight_feed,
         "live_chat": live_chat,
     }
 
