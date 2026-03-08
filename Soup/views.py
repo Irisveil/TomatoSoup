@@ -45,15 +45,13 @@ def home_view(request):
     else:
         author_hobbies = json.loads(author.hobby)
     
-    print(author_hobbies)
-    
     if len(author_hobbies) > 0:
         feed_posts = (
             Post.objects
             .select_related("author")
             .prefetch_related("image_set")
             .filter(hobby__in=author_hobbies)
-            .order_by("-views", "-published")
+            .order_by("-published")
         )
     else:
         feed_posts = Post.objects.none()
@@ -126,7 +124,8 @@ def post_view(request, post_id):
 
     author = post.author
     comments = Comment.objects.filter(post_id=post_id)
-    images = Comment.objects.filter(post_id=post_id)
+    images = Image.objects.filter(post_id=post_id)
+    print(len(images))
 
     if request.method == "POST":
         # a user has commented

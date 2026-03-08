@@ -308,6 +308,7 @@
 .post-content-section {
   margin: 10px 0;
   background-color: var(--ts-color-bg);
+  min-height: fit-content;
 }
 
 .post-comment-section {
