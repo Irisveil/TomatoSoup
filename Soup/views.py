@@ -5,6 +5,7 @@ from django.contrib.auth import logout
 
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+import json
 
 # custom forms
 class CustomForm(UserCreationForm):
@@ -82,36 +83,32 @@ def profile_view(request):
             author.pronouns = req['pronouns']
             author.save()
         else: # updating hobby preferences
-            print("no")
+            if author.hobby == '':
+                hobbi = []
+            else:
+                hobbi = json.loads(author.hobby)
+            if req['hobby'] not in hobbi:
+                hobbi.append(req['hobby'])
+                author.hobby = json.dumps(hobbi)
+                author.save()
+            else:
+                hobbi.remove(req['hobby'])
+                author.hobby = json.dumps(hobbi)
+                author.save()
 
-        selected = author.hobby if isinstance(author.hobby, list) else []
-        user_posts = (
-            Post.objects.filter(author=author)
-            .prefetch_related("image_set")
-            .order_by("-published")
-        )
-        context = {
-            "author": author,
-            "all_hobbies": HOBBY,
-            "selected_hobby_values": selected,
-            "user_posts": user_posts,
-        }
-        return render(request, "profile.html", context)
-
-    else:
-        selected = author.hobby if isinstance(author.hobby, list) else []
-        user_posts = (
-            Post.objects.filter(author=author)
-            .prefetch_related("image_set")
-            .order_by("-published")
-        )
-        context = {
-            "author": author,
-            "all_hobbies": HOBBY,
-            "selected_hobby_values": selected,
-            "user_posts": user_posts,
-        }
-        return render(request, "profile.html", context)
+    selected = json.loads(author.hobby)
+    user_posts = (
+        Post.objects.filter(author=author)
+        .prefetch_related("image_set")
+        .order_by("-published")
+    )
+    context = {
+        "author": author,
+        "all_hobbies": HOBBY,
+        "selected_hobby_values": selected,
+        "user_posts": user_posts,
+    }
+    return render(request, "profile.html", context)
 
 @login_required
 def post_view(request):

@@ -15,8 +15,8 @@
         <li>
           <form name="change-hobby" name="login" method="POST">
             {% csrf_token %}
-            <input type="hidden" name="{{ label }}" value="{{ label }}">
-            <button type="submit" class="hobby-btn {% if value in selected_hobby_values %}hobby-btn--selected{% endif %}" data-hobby="{{ value }}" aria-pressed="{% if value in selected_hobby_values %}true{% else %}false{% endif %}">
+            <input type="hidden" name="hobby" value="{{ label }}">
+            <button type="submit" class="hobby-btn {% if label in selected_hobby_values %}hobby-btn--selected{% endif %}" data-hobby="{{ value }}" aria-pressed="{% if value in selected_hobby_values %}true{% else %}false{% endif %}">
               <span class="hobby-btn-check" aria-hidden="true">✓</span>
               {{ label }}
             </button>
@@ -54,10 +54,8 @@
         <div class="profile-hobbies-tags">
           <span class="profile-field-label">Hobbies</span>
           <div class="hobby-tags" aria-label="Selected hobbies">
-            {% for value, label in all_hobbies %}
-              {% if value in selected_hobby_values %}
-                <span class="hobby-tag">{{ label }}</span>
-              {% endif %}
+            {% for value in selected_hobby_values %}
+                <span class="hobby-tag">{{ value }}</span>
             {% endfor %}
             {% if not selected_hobby_values %}
               <span class="hobby-tags-empty">None selected</span>
