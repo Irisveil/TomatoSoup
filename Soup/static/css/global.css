@@ -66,6 +66,16 @@ a:focus-visible {
   gap: 0.6rem;
 }
 
+.topbar-logo,
+.topbar-logo:link,
+.topbar-logo:visited,
+.topbar-logo:hover,
+.topbar-logo:active,
+.topbar-logo:focus,
+.topbar-logo:focus-visible {
+  text-decoration: none !important;
+}
+
 .topbar-logo img {
   height: 44px;
   width: auto;
