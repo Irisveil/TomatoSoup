@@ -17,35 +17,41 @@
         <h1 class="create-post-title">{{ post.title }}</h1>
     </header>
 
-    <section class="post-content-section create-post-card">
-        {% for img in images %}
-            <!-- images -->
-            <img src="{{ img }}">
-        {% endfor %}
-        
-        <!-- post content -->
-        <p>{{ post.description }}</p>
-    </section>
+    <div style="padding: 0 40px;width: 100%;height: 100%;display: flex;flex-flow: column;">
 
-    <p>Comments</p>
+        <section class="post-content-section create-post-card">
+            {% for img in images %}
+                <!-- images -->
+                <img src="{{ img.image }}">
+            {% endfor %}
+            
+            <!-- post content -->
+            <p>{{ post.description }}</p>
+        </section>
 
-    <section class="post-comment-section">
-        <form method="post" action="">
-            {% csrf_token %}
+        <p style="font-size: 18px;">Comments</p>
 
-            <label class="create-post-field">
-                <textarea id="comment" name="comment" rows="5" cols="30" placeholder="Comment on..."></textarea>
-            </label>
+        <section class="post-comment-section">
+            <form method="post" action="">
+                {% csrf_token %}
 
-            <button type="submit">Post</button>
-        </form>
+                <label class="create-post-field">
+                    <textarea id="comment" class="create-post-textarea" name="comment" rows="3" cols="30" placeholder="Comment on..."></textarea>
+                </label>
 
-        <!-- more comments here -->
-         {% for comment in comments %}
-            <!-- images -->
-            <p>{{ comment.content }}</p>
-        {% endfor %}
-    </section>
+                <div style="width: 100%;display: flex;flex-flow: column;padding: 10px 0;">
+                    <button type="submit" class="create-post-submit" style="height: 35px;align-self:flex-end">Post</button>
+                </div>
+            </form>
+
+            <!-- more comments here -->
+            {% for comment in comments %}
+                <div class="divider"></div>
+                <p>{{ comment.author.username }}</p>
+                <p style="padding-left: 20px;">{{ comment.content }}</p>
+            {% endfor %}
+        </section>
+    </div>
   </article>
 </div>
 {% endblock %}

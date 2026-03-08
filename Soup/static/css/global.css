@@ -252,3 +252,9 @@ button.basic:hover {
     filter: brightness(1.08);
     background-color: #006666;
 }
+
+div.divider {
+  height: 1px;
+  background-color: #2b2b2b;
+  border: none;
+}
