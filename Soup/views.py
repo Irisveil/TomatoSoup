@@ -27,26 +27,18 @@ def home_view(request):
     else:
         feed_posts = Post.objects.none()
 
-    # What's New: newest posts (or What's Hot by views via ?spotlight=views)
-    spotlight_feed = request.GET.get("spotlight", "newest")
-    if spotlight_feed == "views":
-        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-views")[:10]
-    else:
+    # What's Hot: hot posts by views (or newest via ?spotlight=newest)
+    spotlight_feed = request.GET.get("spotlight", "views")
+    if spotlight_feed == "newest":
         whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-published")[:10]
-
-    # Live chat
-    live_chat = (
-        Comment.objects
-        .select_related("author", "post")
-        .order_by("-published")[:15]
-    )
+    else:
+        whats_new_posts = Post.objects.select_related("author").prefetch_related("image_set").order_by("-views")[:10]
 
     context = {
         "author": author,
         "feed_posts": feed_posts,
         "whats_new_posts": whats_new_posts,
         "spotlight_mode": spotlight_feed,
-        "live_chat": live_chat,
     }
 
     return render(request, "home.html", context)
