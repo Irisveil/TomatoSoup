@@ -6,14 +6,18 @@
 }
 
 :root {
-  /* Selection colours / project palette */
+  /* Selection colours / project palette (aligned with login/signup palette) */
+  --ts-palette-dark-teal: #008080;
   --ts-palette-blue-gray: #577590;
   --ts-palette-cyan: #00C3D0;
   --ts-palette-teal: #00C8B3;
   --ts-palette-green: #34C759;
+  --ts-palette-light-green: #98D8A0;
+  --ts-palette-periwinkle: #B8C5D6;
   --ts-palette-salmon: #D78A76;
   --ts-palette-amber: #F2A541;
   --ts-palette-orange: #F6732F;
+  --ts-palette-burnt-orange: #B85C38;
   --ts-palette-yellow: #F8DC3D;
   --ts-palette-cream: #FEEED5;
   --ts-palette-white: #FFFFFF;
@@ -209,29 +213,42 @@ a:focus-visible {
 
 /* Common components */
 input.basic {
-    background-color: white;
-    border: 2px solid #CBD2E0;
-    border-radius: 4px;
+    background-color: var(--ts-palette-white);
+    border: 2px solid var(--ts-palette-periwinkle);
+    border-radius: 6px;
     padding: 5px 15px;
     height: 45px;
     box-sizing: border-box;
     font-size: 14px;
-    font-family: "Ribeye", cursive;
+    font-family: var(--ts-font-body);
+    color: #2b2b2b;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input.basic:hover {
-    background-color: #ededed;
+    border-color: var(--ts-palette-teal);
+}
+
+input.basic:focus {
+    outline: none;
+    border-color: var(--ts-palette-dark-teal);
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
 }
 
 button.basic {
-    background-color: #587DBD;
+    background-color: var(--ts-palette-dark-teal);
     height: 45px;
-    color: white;
+    color: var(--ts-palette-white);
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 16px;
+    font-family: var(--ts-font-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.2s ease, background-color 0.2s ease;
 }
 
 button.basic:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.08);
+    background-color: #006666;
 }
