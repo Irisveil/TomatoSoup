@@ -55,3 +55,7 @@ Figma design: [TomatoSoup (Figma)](https://www.figma.com/design/buGsOhi4ZlIvRWBQ
 ---
 
 We love Tomato Soup.
+@ 2019 Cult. of the Soup*
+
+
+*Cult. is abbreviation for Culture
