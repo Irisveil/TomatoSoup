@@ -1,5 +1,19 @@
 /* Home: two-column layout — My Bowl (orange) | What's Hot (yellow) */
 
+/* Selection colours / project palette */
+:root {
+  --ts-palette-blue-gray: #577590;
+  --ts-palette-cyan: #00C3D0;
+  --ts-palette-teal: #00C8B3;
+  --ts-palette-green: #34C759;
+  --ts-palette-salmon: #D78A76;
+  --ts-palette-amber: #F2A541;
+  --ts-palette-orange: #F6732F;
+  --ts-palette-yellow: #F8DC3D;
+  --ts-palette-cream: #FEEED5;
+  --ts-palette-white: #FFFFFF;
+}
+
 .home-layout {
   display: flex;
   gap: 0;

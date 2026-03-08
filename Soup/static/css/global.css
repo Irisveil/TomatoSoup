@@ -6,13 +6,26 @@
 }
 
 :root {
-  --ts-color-header: #e47c2b;
-  --ts-color-header-text: #fff7e8;
-  --ts-color-bg: #fbe8c4;
-  --ts-color-footer: #5f7389;
-  --ts-color-footer-text: #f4f7fb;
-  --ts-color-link: #f4f7fb;
-  --ts-color-link-muted: rgba(244, 247, 251, 0.78);
+  /* Selection colours / project palette */
+  --ts-palette-blue-gray: #577590;
+  --ts-palette-cyan: #00C3D0;
+  --ts-palette-teal: #00C8B3;
+  --ts-palette-green: #34C759;
+  --ts-palette-salmon: #D78A76;
+  --ts-palette-amber: #F2A541;
+  --ts-palette-orange: #F6732F;
+  --ts-palette-yellow: #F8DC3D;
+  --ts-palette-cream: #FEEED5;
+  --ts-palette-white: #FFFFFF;
+
+  /* Semantic colours (from palette – profile mockup) */
+  --ts-color-header: var(--ts-palette-orange);
+  --ts-color-header-text: var(--ts-palette-white);
+  --ts-color-bg: var(--ts-palette-cream);
+  --ts-color-footer: var(--ts-palette-blue-gray);
+  --ts-color-footer-text: var(--ts-palette-cream);
+  --ts-color-link: var(--ts-palette-cream);
+  --ts-color-link-muted: rgba(254, 238, 213, 0.78);
   /* Readable font for lists, forms, body text (Ribeye is display-only) */
   --ts-font-body: "Segoe UI", system-ui, -apple-system, sans-serif;
 }
