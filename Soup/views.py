@@ -102,8 +102,6 @@ def profile_view(request):
         .prefetch_related("image_set")
         .order_by("-published")
     )
-    print(selected)
-    print(HOBBY)
     context = {
         "author": author,
         "all_hobbies": HOBBY,
