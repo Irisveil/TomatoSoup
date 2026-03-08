@@ -48,7 +48,7 @@ class Author(AbstractBaseUser, PermissionsMixin):
     email = models.CharField(blank=True)
     password = models.CharField(max_length=128, default="thisisapassword")
     pronouns = models.CharField(max_length=128, default="")
-    hobby = JSONField(default='') # This will be a list of strings of hobbies that the user has selected
+    hobby = JSONField(default=list, blank=True) # This will be a list of strings of hobbies that the user has selected
 
     date_joined = models.DateTimeField(default=timezone.now)
     is_superuser = models.BooleanField(default=False)
@@ -194,7 +194,7 @@ class PostAgentMeta(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check = Q(topic_candidate__isnull = False) | Q(revived_from_post__isnull = False),
+                condition = Q(topic_candidate__isnull = False) | Q(revived_from_post__isnull = False),
                 name = 'post_agent_meta_origin_link',
             )
         ]

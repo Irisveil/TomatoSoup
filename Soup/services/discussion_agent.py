@@ -8,7 +8,7 @@ import feedparser
 import requests
 from dateutil import parser as date_parser
 from django.db import transaction
-from django.db.models import Count, F, FloatField, Q, EspressionWrapper, Max
+from django.db.models import Count, F, FloatField, Q, ExpressionWrapper, Max
 from django.utils import timezone
 
 from Soup.models import Author, Comment, Post, AgentRun, HobbyTag, PostAgentMeta, TopicCandidate
@@ -48,77 +48,77 @@ def normalize_item(source_name, source_url, title, summary, published_at, region
         "raw_hash": raw_hash,
     }
 
-def ingest_topics(days_back = 7):
-    cutoff = timezone.now() - timedelta(days = days_back)
+def ingest_topics(days_back=7):
+    cutoff = timezone.now() - timedelta(days=days_back)
     kept = []
     fetched_count = 0
 
-    # RSS INGESTING
+    # RSS ingestion
     for source_name, feed_url in RSS_SOURCES:
         feed = feedparser.parse(feed_url)
-        entries = getattr(feed, 'entries', [])
+        entries = getattr(feed, "entries", [])
         fetched_count += len(entries)
 
         for entry in entries:
-            title = getattr(entry, 'title', '') or ""
-            summary = getattr(entry, 'summary', '') or ""
-            link = getattr(entry, 'link', feed_url)
+            title = getattr(entry, "title", "") or ""
+            summary = getattr(entry, "summary", "") or ""
+            link = getattr(entry, "link", feed_url)
 
-            published_raw =getattr(entry, 'published', None) or getattr(entry, 'updated', None)
+            published_raw = getattr(entry, "published", None) or getattr(entry, "updated", None)
             if published_raw:
                 dt = date_parser.parse(published_raw)
                 if timezone.is_naive(dt):
                     dt = timezone.make_aware(dt, timezone.get_current_timezone())
+            else:
+                dt = timezone.now()
 
-                else:
-                    dt = timezone.now()
-                
-                if dt < cutoff:
-                    continue
-
-                normalized = normalize_item(source_name, link, title, summary, dt)
-
-                obj, created = TopicCandidate.objects.get_or_create(
-                    raw_hash = normalized['raw_hash'],
-                    defaults = normalized
-                )
-
-                if created:
-                    kept.append(obj)
-        
-        # Optional events API ingestion
-        for url in EVENT_API_URLS:
-            try:
-                resp = requests.get(url, timeout = 10)
-                resp.raise_for_status()
-                data = resp.json()
-            except Exception:
+            if dt < cutoff:
                 continue
 
-            for item in data:
-                fetched_count += 1
-                title = item.get("title", "")
-                summary = item.get("description", "")
-                link = item.get("url", url)
-                published_raw = item.get("published_at") or timezone.now().isoformat()
-                dt = date_parser.parse(published_raw)
+            normalized = normalize_item(source_name, link, title, summary, dt)
+            obj, created = TopicCandidate.objects.get_or_create(
+                raw_hash=normalized["raw_hash"],
+                defaults=normalized,
+            )
+            if created:
+                kept.append(obj)
 
+    # Optional events API ingestion
+    for url in EVENT_API_URLS:
+        try:
+            resp = requests.get(url, timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception:
+            continue
+
+        for item in data:
+            fetched_count += 1
+            title = item.get("title", "")
+            summary = item.get("description", "")
+            link = item.get("url", url)
+
+            published_raw = item.get("published_at")
+            if published_raw:
+                dt = date_parser.parse(published_raw)
                 if timezone.is_naive(dt):
                     dt = timezone.make_aware(dt, timezone.get_current_timezone())
-                
-                if dt < cutoff:
-                    continue
+            else:
+                dt = timezone.now()
 
-                normalized = normalize_item("EventsAPI", link, title, summary, dt)
-                obj, created = TopicCandidate.objects.get_or_create(
-                    raw_hash = normalized['raw_hash'],
-                    defaults = normalized,
-                )
+            if dt < cutoff:
+                continue
 
-                if created:
-                    kept.append(obj)
-        
-        return fetched_count, kept
+            normalized = normalize_item("EventsAPI", link, title, summary, dt)
+            obj, created = TopicCandidate.objects.get_or_create(
+                raw_hash=normalized["raw_hash"],
+                defaults=normalized,
+            )
+            if created:
+                kept.append(obj)
+
+    return fetched_count, kept
+
     
 def classify_topics_to_hobbies(candidates):
     tags_by_slug = {t.slug: t for t in HobbyTag.objects.all()}
@@ -232,7 +232,7 @@ def publish_post(origin_type, title, body, tags, *, topic_candidate = None, revi
     if tags:
         hobby_choice = tags[0].upper() if tags[0].upper() in dict(Post._meta.get_field("hobby").choices) else "PLANTS"
 
-    post = POST.objects.create(
+    post = Post.objects.create(
         title = title,
         description = body,
         author = system_author,
@@ -251,6 +251,14 @@ def publish_post(origin_type, title, body, tags, *, topic_candidate = None, revi
 
     return post
 
+def ai_posted_recently(hobby_value, hours = 24):
+    cutoff = timezone.now() - timedelta(hours = hours)
+
+    return PostAgentMeta.objects.filter(
+        post__hobby - hobby_value,
+        post__published__gte = cutoff,
+    ).exists()
+
 def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
     run = AgentRun.objects.create(started_at = timezone.now())
     posts_created = 0
@@ -260,7 +268,7 @@ def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
         kept_candidates = classify_topics_to_hobbies(new_candidates)
 
         run.items_fetched = fetched_count
-        run.items_kepts = len(kept_candidates) # model uses items_kept
+        run.items_kepts = len(kept_candidates) # model uses items_kepts
         run.save(update_fields = ['items_fetched', 'items_kepts'])
 
         # External topics
@@ -271,6 +279,19 @@ def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
             if not ok:
                 candidate.status = TopicCandidate.Status.REJECTED
                 candidate.save(update_fields=["status"])
+                continue
+
+            hobby_value = "PLANTS"
+            if tag_slugs:
+                candidate_hobby = tag_slugs[0].upper()
+                valid_choices = dict(Post._meta.get_failed("hobby").choices)
+                if candidate_hobby in valid_choices:
+                    hobby_value = candidate_hobby
+            
+            if ai_posted_recently(hobby_value, hours = 24):
+                continue
+
+            if ai_posted_recently(post.hobby, hours = 24):
                 continue
 
             if not dry_run:
@@ -319,3 +340,4 @@ def run_agent_once(dry_run = False, external_cap = 3, revival_cap = 2):
         raise
 
     return run
+
