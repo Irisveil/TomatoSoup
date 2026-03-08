@@ -117,10 +117,25 @@ def post_view(request, post_id):
     Viewing a post and allows users to comment
     """
     post = get_object_or_404(Post, pk=post_id)
+
     author = post.author
     comments = Comment.objects.filter(post_id=post_id)
     images = Comment.objects.filter(post_id=post_id)
-    # TODO: also update the view number on this post
+
+    if request.method == "POST":
+        # a user has commented
+        req = request.POST
+        comment = Comment.objects.create(
+            post=post,
+            author=request.user,
+            content=req['comment']
+        )
+        comment.save()
+    else:
+        # add a view
+        post.views = post.views + 1
+        post.save()
+
     context = {
         "post": post,
         "author": author,
@@ -163,7 +178,7 @@ def create_post_view(request):
                 i += 1
         # redirect to home page
         return redirect('home')
-        
+
     else:
         context = {"all_hobbies": HOBBY}
         return render(request, "create_post.html", context)
