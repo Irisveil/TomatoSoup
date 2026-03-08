@@ -2,21 +2,50 @@
 {% load static %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/profile.css' %}"> -->
+<link rel="stylesheet" href="{% static 'css/create_post.css' %}">
 {% endblock %}
 
 {% block content %}
 <!-- This is passed the Post (alias: post) object from models and the Author (alias: author) object from models -->
 <!-- comments are passed as comments (list), images are passed as images (list) -->
+<div class="create-post-page">
+  <article class="create-post-card">
+    <header class="create-post-header">
+        <a href="{% url 'home' %}" class="create-post-back" aria-label="Back">
+        <span class="create-post-back-icon" aria-hidden="true">←</span>
+        </a>
+        <h1 class="create-post-title">{{ post.title }}</h1>
+    </header>
 
-<form method="post" action="">
-    {% csrf_token %}
+    <section class="post-content-section create-post-card">
+        {% for img in images %}
+            <!-- images -->
+            <img src="{{ img }}">
+        {% endfor %}
+        
+        <!-- post content -->
+        <p>{{ post.description }}</p>
+    </section>
 
-    <label>
-        <span>comment</span>
-        <textarea id="comment" name="comment" rows="5" cols="30" placeholder="Comment on..."></textarea>
-    </label>
+    <p>Comments</p>
 
-    <button type="submit">Post</button>
-</form>
+    <section class="post-comment-section">
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <label class="create-post-field">
+                <textarea id="comment" name="comment" rows="5" cols="30" placeholder="Comment on..."></textarea>
+            </label>
+
+            <button type="submit">Post</button>
+        </form>
+
+        <!-- more comments here -->
+         {% for comment in comments %}
+            <!-- images -->
+            <p>{{ comment.content }}</p>
+        {% endfor %}
+    </section>
+  </article>
+</div>
 {% endblock %}
