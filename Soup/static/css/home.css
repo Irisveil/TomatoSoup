@@ -19,16 +19,17 @@
   gap: 0;
   flex: 1;
   min-height: 0;
-  border: 1px solid #e8d4a8;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   overflow: hidden;
 }
 
+/* Left column: My Bowl – lighter orange (palette amber) */
 .home-my-bowl {
   flex: 2;
   min-width: 0;
-  background-color: var(--ts-color-header);
-  color: var(--ts-color-header-text);
+  background-color: var(--ts-palette-amber);
+  color: #2b2b2b;
   padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -51,17 +52,13 @@
   color: #2b2b2b;
 }
 
-.home-my-bowl h2 {
-  color: var(--ts-color-header-text);
-}
-
 .home-create-post-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #587DBD;
-  color: #fff;
+  background-color: var(--ts-palette-blue-gray);
+  color: var(--ts-palette-white);
   border: none;
   border-radius: 4px;
   font-size: 0.95rem;
@@ -105,14 +102,15 @@
   font-family: var(--ts-font-body);
 }
 
+/* Right column: What's Hot – bright yellow (palette) */
 .home-whats-hot {
   flex: 1;
   min-width: 0;
-  background-color: #f5e6a6;
+  background-color: var(--ts-palette-yellow);
   padding: 1.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #e8d4a8;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .home-whats-hot h2 {
@@ -143,6 +141,6 @@
 
   .home-whats-hot {
     border-left: none;
-    border-top: 1px solid #e8d4a8;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
   }
 }
