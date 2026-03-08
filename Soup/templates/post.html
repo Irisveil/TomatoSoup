@@ -27,6 +27,7 @@
             
             <!-- post content -->
             <p>{{ post.description }}</p>
+            <p style="font-size: 14px;text-align: right;">{{ post.published|date:"M d, Y H:i" }}</p>
         </section>
 
         <p style="font-size: 18px;">Comments</p>
@@ -47,7 +48,7 @@
             <!-- more comments here -->
             {% for comment in comments %}
                 <div class="divider"></div>
-                <p>{{ comment.author.username }}</p>
+                <p>{{ comment.author.username }} • {{ comment.published|date:"M d, Y H:i" }}</p>
                 <p style="padding-left: 20px;">{{ comment.content }}</p>
             {% endfor %}
         </section>

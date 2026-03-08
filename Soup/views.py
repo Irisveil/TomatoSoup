@@ -98,6 +98,7 @@ def profile_view(request):
                 hobbi.remove(req['hobby'])
                 author.hobby = json.dumps(hobbi)
                 author.save()
+        return redirect('profile')
     if author.hobby == '':
         selected = []
     else:
@@ -123,8 +124,8 @@ def post_view(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
     author = post.author
-    comments = Comment.objects.filter(post_id=post_id)
-    images = Image.objects.filter(post_id=post_id)
+    comments = Comment.objects.filter(post_id=post_id).order_by("-published")
+    images = Image.objects.filter(post_id=post_id).order_by("-order")
     print(len(images))
 
     if request.method == "POST":
@@ -136,6 +137,7 @@ def post_view(request, post_id):
             content=req['comment']
         )
         comment.save()
+        return redirect('post', post_id=post.id)
     else:
         # add a view
         post.views = post.views + 1
