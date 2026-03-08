@@ -2,9 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Author, Post, Comment, HOBBY
 
-def login_view(request):
 
-    return render(request, 'login.html')
 
 def signup_view(request):
 
