@@ -23,16 +23,22 @@
             </section>
 
             <nav class="topbar-right" aria-label="Primary">
-                <a href="#" class="topbar-link">
-                    <span class="topbar-link-icon" aria-hidden="true"></span>
+                <a href="{% url 'home' %}" class="topbar-link {% if request.resolver_match.url_name == 'home' %}topbar-link--active{% endif %}">
+                    <span class="topbar-link-icon" aria-hidden="true">
+                        <img src="{% static 'icons/Icon Left_home.svg' %}" alt="" />
+                    </span>
                     <span class="topbar-link-label">Home</span>
                 </a>
-                <a href="#" class="topbar-link">
-                    <span class="topbar-link-icon" aria-hidden="true"></span>
+                <a href="{% url 'profile' %}" class="topbar-link {% if request.resolver_match.url_name == 'profile' %}topbar-link--active{% endif %}">
+                    <span class="topbar-link-icon" aria-hidden="true">
+                        <img src="{% static 'icons/Icon Left_profile.svg' %}" alt="" />
+                    </span>
                     <span class="topbar-link-label">Profile</span>
                 </a>
-                <a href="#" class="topbar-link">
-                    <span class="topbar-link-icon" aria-hidden="true"></span>
+                <a href="{% url 'login' %}" class="topbar-link {% if request.resolver_match.url_name == 'login' %}topbar-link--active{% endif %}">
+                    <span class="topbar-link-icon" aria-hidden="true">
+                        <img src="{% static 'icons/Icon Left_signin.svg' %}" alt="" />
+                    </span>
                     <span class="topbar-link-label">Sign In</span>
                 </a>
             </nav>

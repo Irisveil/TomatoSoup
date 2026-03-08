@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import Author, Post, Comment
+from .models import Author, Post, Comment, HOBBY
 
 def login_view(request):
 
@@ -56,8 +56,20 @@ def profile_view(request):
     """
     Allows users to view their profile
     """
-
-    return render(request, 'profile.html')
+    author = request.user
+    selected = author.hobby if isinstance(author.hobby, list) else []
+    user_posts = (
+        Post.objects.filter(author=author)
+        .prefetch_related("image_set")
+        .order_by("-published")
+    )
+    context = {
+        "author": author,
+        "all_hobbies": HOBBY,
+        "selected_hobby_values": selected,
+        "user_posts": user_posts,
+    }
+    return render(request, "profile.html", context)
 
 @login_required
 def post_view(request):
